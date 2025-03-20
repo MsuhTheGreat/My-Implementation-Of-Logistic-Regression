@@ -9,9 +9,11 @@ X, Y = data.data, data.target
 # Splitting data into training data and testing data and saving it
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=42)
 
+# Structuring Output Data
 Y_train = Y_train.reshape(-1, 1)
 Y_test = Y_test.reshape(-1, 1)
 
+# Saving Into Files to Reuse Again
 np.save("X_train.npy", X_train)
 np.save("Y_train.npy", Y_train)
 np.save("X_test.npy", X_test)
@@ -29,26 +31,28 @@ b = np.random.randn(1, 1)
 
 # Iterate through all m examples
 for i in range(epochs):
-  # Calculating predicted values
-  Z = np.dot(X_train, W) + b
-  Z = np.clip(Z, -500, 500)
-  A = 1 / (1 + np.exp(-Z))
+    # Calculating predicted values
+    Z = np.dot(X_train, W) + b
+    # Avoid overflowing
+    Z = np.clip(Z, -500, 500)
+    A = 1 / (1 + np.exp(-Z))
 
-  # Calculate cost function
-  J = -np.mean(Y_train * np.log(A + epsilon) + (1 - Y_train) * np.log(1 - A + epsilon))
+    # Calculate cost function
+    J = -np.mean(Y_train * np.log(A + epsilon) + (1 - Y_train) * np.log(1 - A + epsilon))
 
-  # Calculate necessary determinants
-  dZ = A - Y_train
-  dW = np.dot(X_train.T, dZ) / m
-  db = np.sum(dZ) / m
+    # Calculate necessary determinants
+    dZ = A - Y_train
+    dW = np.dot(X_train.T, dZ) / m
+    db = np.sum(dZ) / m
 
-  # Updating weights and bias (Applying Gradient Descent)
-  W -= alpha * dW
-  b -= alpha * db * 0.1
+    # Updating weights and bias (Applying Gradient Descent)
+    W -= alpha * dW
+    b -= alpha * db * 0.1
 
-  if i % 10_000 == 0:
-    print(f"{i} epochs done.")
-    print(f"Cost Function Value = {J:.4f}\n")
+    # Output iteration number and cost value after every 10,000 iterations
+    if i % 10_000 == 0:
+      print(f"{i} epochs done.")
+      print(f"Cost Function Value = {J:.4f}\n")
 
 print("Final Weights:", W)
 print("Final Bias:", b)
