@@ -19,7 +19,7 @@ def load_test_data():
 def predict(X_test, W, b):
     """Make predictions using logistic regression."""
     # Doing Prediction
-    Z = np.dot(X_test, W) + b
+    Z = np.dot(W, X_test) + b
     # Avoid Overflowing
     Z = np.clip(Z, -500, 500)
     A = 1 / (1 + np.exp(-Z))
